@@ -27,9 +27,7 @@ https://<admin.ecomm-app.com>
 
 Todos los endpoints requieren un token de autenticación en el encabezado de la solicitud. El token debe ser proporcionado en el formato:
 
-Authorization: Bearer
-
-[Token]
+Authorization: Bearer [Tu Token de Autenticación]
 
 ## Endpoints
 
@@ -38,7 +36,7 @@ Authorization: Bearer
 - **URL**: /api/challenge-items
 - **Method**: GET
 - **Headers**:
-  - Authorization: Bearer
+  - Authorization: Bearer [Tu Token de Autenticación]
 - **URL Params**: None
 - **Success Response**:
   - **Code**: 200 OK
@@ -53,16 +51,18 @@ Authorization: Bearer
 - **URL**: /api/challenge-items
 - **Method**: POST
 - **Headers**:
-  - Authorization: Bearer
+  - Authorization: Bearer [Tu Token de Autenticación]
   - Content-Type: application/json
 - **Data Params**:
+  ```
   {
-  "picture": "[URL de la imagen del artículo]",
-  "name": "[Nombre del artículo]",
-  "description": "[Descripción del artículo]",
-  "stock": [Cantidad en stock],
-  "price": [Precio del artículo]
+    "picture": "[URL de la imagen del artículo]",
+    "name": "[Nombre del artículo]",
+    "description": "[Descripción del artículo]",
+    "stock": [Cantidad en stock],
+    "price": [Precio del artículo]
   }
+  ```
 - **Success Response**:
   - **Code**: 200 OK
   - **Content**: "OK"
@@ -75,18 +75,20 @@ Authorization: Bearer
 - **URL**: /api/challenge-items/:id
 - **Method**: PUT
 - **Headers**:
-  - Authorization: Bearer
+  - Authorization: Bearer [Tu Token de Autenticación]
   - Content-Type: application/json
 - **URL Params**:
   - id=[integer]
 - **Data Params**:
+  ```
   {
-  "picture": "[URL de la imagen del artículo]",
-  "name": "[Nombre del artículo]",
-  "description": "[Descripción del artículo]",
-  "stock": [Cantidad en stock],
-  "price": [Precio del artículo]
+    "picture": "[URL de la imagen del artículo]",
+    "name": "[Nombre del artículo]",
+    "description": "[Descripción del artículo]",
+    "stock": [Cantidad en stock],
+    "price": [Precio del artículo]
   }
+  ```
 - **Success Response**:
   - **Code**: 200 OK
   - **Content**: "OK"
@@ -99,14 +101,16 @@ Authorization: Bearer
 - **URL**: /api/challenge-items/:id
 - **Method**: PATCH
 - **Headers**:
-  - Authorization: Bearer
+  - Authorization: Bearer [Tu Token de Autenticación]
   - Content-Type: application/json
 - **URL Params**:
   - id=[integer]
 - **Data Params**: Incluir solo los campos que necesitan ser actualizados.
+  ```
   {
-  "stock": [Nueva cantidad en stock]
+   "stock": [Nueva cantidad en stock]
   }
+  ```
 - **Success Response**:
   - **Code**: 200 OK
   - **Content**: "OK"
@@ -128,3 +132,35 @@ Authorization: Bearer
 - **Error Response**:
   - **Code**: 500 INTERNAL SERVER ERROR
   - **Content**: { error : "Error message" }
+
+### Subir Imagen de Producto
+
+- **URL**: `/api/challenge-items/upload_img/:id`
+- **Method**: PUT
+- **Headers**:
+  - Authorization: Bearer [Tu Token de Autenticación]
+  - Content-Type: multipart/form-data
+- **URL Params**:
+  - id=[integer]
+- **Data Params**:
+  - file: [Archivo de imagen]
+- **Success Response**:
+  - **Code**: 200 OK
+  - **Content**:
+    ```
+    {
+      "picture_url": "[URL de la imagen actualizada]"
+    }
+    ```
+- **Error Response**:
+  - **Code**: 500 INTERNAL SERVER ERROR
+  - **Content**:
+    ```
+    {
+      error: "Error message"
+    }
+    ```
+- **Notes**:
+  - Este endpoint sube una imagen para un artículo específico, reemplazando cualquier imagen anterior que pudiera estar asociada al artículo.
+  - Asegúrate de que el archivo de imagen se envíe en el formulario con el nombre "file".
+  - La URL de la imagen actualizada se devuelve como respuesta exitosa, lo que te permite acceder a la imagen cargada.
