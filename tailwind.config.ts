@@ -7,6 +7,9 @@ export default {
       fontFamily: {
         poppins: "Poppins, sans-serif",
       },
+      colors: {
+        darkBlue: "#182640",
+      },
     },
   },
   plugins: [],
