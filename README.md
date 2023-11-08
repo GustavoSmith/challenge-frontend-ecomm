@@ -42,8 +42,10 @@ Authorization: Bearer [Tu Token de Autenticación]
   - **Code**: 200 OK
   - **Content**: Array de objetos con información de los artículos.
 - **Error Response**:
+
   - **Code**: 500 INTERNAL SERVER ERROR
-  - **Content**: { error : "Error message" }
+  - **Content**: `{ error : "Error message" }`
+
 - **Notes**: Este endpoint devuelve una lista de todos los artículos disponibles para retos.
 
 ### Crear Producto
@@ -54,7 +56,7 @@ Authorization: Bearer [Tu Token de Autenticación]
   - Authorization: Bearer [Tu Token de Autenticación]
   - Content-Type: application/json
 - **Data Params**:
-  ```
+  ```json
   {
     "picture": "[URL de la imagen del artículo]",
     "name": "[Nombre del artículo]",
@@ -68,7 +70,7 @@ Authorization: Bearer [Tu Token de Autenticación]
   - **Content**: "OK"
 - **Error Response**:
   - **Code**: 500 INTERNAL SERVER ERROR
-  - **Content**: { error : "Error message" }
+  - **Content**: `{ error : "Error message" }`
 
 ### Actualizar Producto
 
@@ -80,7 +82,7 @@ Authorization: Bearer [Tu Token de Autenticación]
 - **URL Params**:
   - id=[integer]
 - **Data Params**:
-  ```
+  ```json
   {
     "picture": "[URL de la imagen del artículo]",
     "name": "[Nombre del artículo]",
@@ -94,7 +96,7 @@ Authorization: Bearer [Tu Token de Autenticación]
   - **Content**: "OK"
 - **Error Response**:
   - **Code**: 500 INTERNAL SERVER ERROR
-  - **Content**: { error : "Error message" }
+  - **Content**: `{ error : "Error message" }`
 
 ### Actualización Parcial de Producto
 
@@ -106,7 +108,7 @@ Authorization: Bearer [Tu Token de Autenticación]
 - **URL Params**:
   - id=[integer]
 - **Data Params**: Incluir solo los campos que necesitan ser actualizados.
-  ```
+  ```json
   {
    "stock": [Nueva cantidad en stock]
   }
@@ -116,7 +118,7 @@ Authorization: Bearer [Tu Token de Autenticación]
   - **Content**: "OK"
 - **Error Response**:
   - **Code**: 500 INTERNAL SERVER ERROR
-  - **Content**: { error : "Error message" }
+  - **Content**: `{ error : "Error message" }`
 
 ### Eliminar Producto
 
@@ -131,7 +133,7 @@ Authorization: Bearer [Tu Token de Autenticación]
   - **Content**: "OK"
 - **Error Response**:
   - **Code**: 500 INTERNAL SERVER ERROR
-  - **Content**: { error : "Error message" }
+  - **Content**: `{ error : "Error message" }`
 
 ### Subir Imagen de Producto
 
@@ -147,19 +149,14 @@ Authorization: Bearer [Tu Token de Autenticación]
 - **Success Response**:
   - **Code**: 200 OK
   - **Content**:
-    ```
+    ```json
     {
       "picture_url": "[URL de la imagen actualizada]"
     }
     ```
 - **Error Response**:
   - **Code**: 500 INTERNAL SERVER ERROR
-  - **Content**:
-    ```
-    {
-      error: "Error message"
-    }
-    ```
+  - **Content**: `{ error : "Error message" }`
 - **Notes**:
   - Este endpoint sube una imagen para un artículo específico, reemplazando cualquier imagen anterior que pudiera estar asociada al artículo.
   - Asegúrate de que el archivo de imagen se envíe en el formulario con el nombre "file".
