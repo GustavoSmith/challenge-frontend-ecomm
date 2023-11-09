@@ -15,7 +15,7 @@ const SideBar = () => {
 
   const [isOpen, setIsOpen] = useState(true);
   return (
-    <aside className="flex flex-col bg-darkBlue py-[1.11rem] text-white max-[1130px]:px-3 min-[1130px]:h-screen min-[1130px]:w-48 min-[1130px]:px-2 min-[1130px]:pt-2">
+    <aside className="flex flex-col bg-darkBlue-100 py-[1.11rem] text-white max-[1130px]:px-3 min-[1130px]:h-screen min-[1130px]:w-48 min-[1130px]:px-2 min-[1130px]:pt-2">
       <div className="flex w-full items-center justify-between">
         <button
           onClick={() => setIsOpen((open) => !open)}

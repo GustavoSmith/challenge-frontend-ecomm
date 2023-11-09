@@ -8,9 +8,12 @@ export default {
         poppins: "Poppins, sans-serif",
       },
       colors: {
-        darkBlue: "#182640",
+        darkBlue: {
+          100: "#182640",
+          200: "#304B7F",
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 } satisfies Config;

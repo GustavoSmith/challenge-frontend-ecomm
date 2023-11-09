@@ -1,4 +1,4 @@
-@import "@fontsource/poppins";
+@import "assets/fonts/fonts.css";
 
 @tailwind base;
 @tailwind components;
