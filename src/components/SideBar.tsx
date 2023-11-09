@@ -13,9 +13,9 @@ const SideBar = () => {
     setIsOpen(!isMobile);
   }, [width]);
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <aside className="flex flex-col bg-darkBlue-100 py-[1.11rem] text-white max-[1130px]:px-3 min-[1130px]:h-screen min-[1130px]:w-48 min-[1130px]:px-2 min-[1130px]:pt-2">
+    <aside className="flex flex-col bg-darkBlue-100 px-3 py-[1.11rem] text-white min-[1130px]:h-screen min-[1130px]:w-64 min-[1130px]:px-2 min-[1130px]:py-2">
       <div className="flex w-full items-center justify-between">
         <button
           onClick={() => setIsOpen((open) => !open)}
@@ -61,11 +61,14 @@ const SideBar = () => {
         />
       </div>
       {isOpen && (
-        <div className="flex flex-col gap-2 max-[1130px]:p-4">
-          <a className="flex w-full items-center justify-between" href="/">
+        <div className="flex flex-col gap-2 bg-darkBlue-100 max-[1129px]:p-4">
+          <a
+            className="flex w-full items-center justify-between gap-3"
+            href="/"
+          >
             <div className="flex items-center gap-1">
               <img src={MercadoLibreIcon} alt="Inventario" />
-              <span>Mercado Libre</span>
+              <span className="max-[1129px]:text-sm">Mercado Libre</span>
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"

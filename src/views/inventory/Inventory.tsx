@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { InventoryItem } from ".";
+import DialogModal from "@/components/DialogModal";
 
 type InventoryItem = {
   picture: string;
@@ -12,6 +13,8 @@ type InventoryItem = {
 
 const Inventory = () => {
   const [data, setData] = useState<InventoryItem[]>([]);
+  const [openNewProdModal, setOpenNewProdModal] = useState<boolean>(false);
+  const [openChangeImgModal, setOpenChangeImgModal] = useState<boolean>(false);
 
   useEffect(() => {
     fetch("https://admin.ecomm-app.com/api/challenge-items", {
@@ -28,8 +31,6 @@ const Inventory = () => {
         return [];
       });
   }, []);
-
-  console.log({ data });
 
   return (
     <div className="h-[calc(100vh-3.75rem)] bg-[#ececec] py-3 pl-3 pr-[18px]">
@@ -54,7 +55,10 @@ const Inventory = () => {
           />
           <span>Seleccionar todos</span>
         </label>
-        <button className="ml-auto mr-0 flex w-fit items-center rounded-sm bg-[#6097ff] px-2 py-2 text-white hover:bg-[#4871bf] ">
+        <button
+          onClick={() => setOpenNewProdModal(true)}
+          className="ml-auto mr-0 flex w-fit items-center rounded-sm bg-[#6097ff] px-2 py-2 text-white hover:bg-[#4871bf] "
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 18 18"
@@ -79,6 +83,11 @@ const Inventory = () => {
           </svg>
           <span>Nuevo producto</span>
         </button>
+        <DialogModal
+          isOpen={openNewProdModal}
+          setIsOpen={setOpenNewProdModal}
+          name="Nuevo producto"
+        />
       </div>
 
       {data.length === 0 ? (
@@ -106,6 +115,7 @@ const Inventory = () => {
           {data.map((item) => (
             <InventoryItem
               key={item.id}
+              id={item.id}
               title={item.name}
               stock={item.stock}
               price={item.price}
@@ -114,6 +124,12 @@ const Inventory = () => {
           ))}
         </div>
       )}
+
+      <DialogModal
+        isOpen={openChangeImgModal}
+        setIsOpen={setOpenChangeImgModal}
+        name="Foto de producto"
+      />
     </div>
   );
 };

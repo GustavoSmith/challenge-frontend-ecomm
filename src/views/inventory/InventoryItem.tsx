@@ -1,14 +1,12 @@
 type ItemProps = {
+  id: number;
   title: string;
   stock: number;
   price: number;
   picture: string;
 };
 
-/* const NewProductModal = () => {
-}; */
-
-const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
+const InventoryItem = ({ id, title, stock, price, picture }: ItemProps) => {
   return (
     <div className="flex min-h-[8.25rem] gap-3 rounded-sm bg-white p-3 shadow-[2px_2px_15px_0_rgba(0,0,0,0.15)]">
       <input
@@ -50,37 +48,40 @@ const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
       </button>
       <div className="grid w-full grid-cols-2 gap-3 min-[1130px]:h-fit">
         <label
-          htmlFor="productTitle"
+          htmlFor={`productTitle-${id}`}
           className="flex w-full flex-col max-[1130px]:col-span-full"
         >
           <span>Título</span>
           <input
             type="text"
-            id="productTitle"
+            id={`productTitle-${id}`}
             defaultValue={title}
             placeholder="Prueba"
             className="rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
           />
         </label>
-        <div className="flex gap-3">
-          <label htmlFor="productStock" className="flex w-[5.6875rem] flex-col">
+        <div className="flex gap-3 max-[350px]:flex-col">
+          <label
+            htmlFor={`productStock-${id}`}
+            className="flex w-[5.6875rem] flex-col"
+          >
             <span>Stock</span>
             <input
               type="number"
-              id="productStock"
+              id={`productStock-${id}`}
               defaultValue={stock}
               placeholder="Prueba"
               className="rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
             />
           </label>
-          <label htmlFor="productPrice" className="flex flex-col">
+          <label htmlFor={`productPrice-${id}`} className="flex flex-col">
             <span>Precio</span>
             <div className="relative flex flex-row">
               <input
                 type="number"
                 min="1"
                 step="any"
-                id="productPrice"
+                id={`productPrice-${id}`}
                 defaultValue={price}
                 placeholder="Prueba"
                 className="peer w-28 rounded-sm border-[#A1A3AF] pl-10 text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
