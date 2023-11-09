@@ -1,7 +1,7 @@
 const NavBar = () => {
   return (
     <div className="flex items-center justify-end bg-white px-3 py-1 shadow-[0_2px_10px_0_rgba(48,75,127,0.20)]">
-      <div className="text-darkBlue flex gap-4">
+      <div className="flex gap-4 text-darkBlue">
         <a href="/">
           {/* Truck SVG */}
           <svg
