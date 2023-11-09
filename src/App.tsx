@@ -5,7 +5,7 @@ const App = () => {
   return (
     <div className="flex font-poppins max-[1129px]:flex-col">
       <SideBar />
-      <div className="grow">
+      <div className="grow" id="page">
         <NavBar />
         <Inventory />
       </div>

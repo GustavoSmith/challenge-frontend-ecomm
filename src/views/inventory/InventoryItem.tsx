@@ -8,7 +8,7 @@ type ItemProps = {
 
 const InventoryItem = ({ id, title, stock, price, picture }: ItemProps) => {
   return (
-    <div className="flex min-h-[8.25rem] gap-3 rounded-sm bg-white p-3 shadow-[2px_2px_15px_0_rgba(0,0,0,0.15)]">
+    <div className="flex gap-3 rounded-sm bg-white p-3 shadow-[2px_2px_15px_0_rgba(0,0,0,0.15)] min-[1130px]:min-h-[5.25rem]">
       <input
         name="selectItem1"
         type="checkbox"

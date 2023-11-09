@@ -7,19 +7,29 @@ import { useState, useEffect } from "react";
 
 const SideBar = () => {
   const { width } = useWindowDimensions();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const isMobile = width < 1130;
-    setIsOpen(!isMobile);
-  }, [width]);
+    setIsOpen((currentIsOpen) => {
+      const page = document.getElementById("page");
+      if (isMobile && currentIsOpen) {
+        document.body.classList.add("overflow-hidden");
+        page?.classList.add("blur-sm");
+        return true;
+      }
+      document.body.classList.remove("overflow-hidden");
+      page?.classList.remove("blur-sm");
+      return !isMobile;
+    });
+  }, [width, isOpen]);
 
-  const [isOpen, setIsOpen] = useState(false);
   return (
-    <aside className="flex flex-col bg-darkBlue-100 px-3 py-[1.11rem] text-white min-[1130px]:h-screen min-[1130px]:w-64 min-[1130px]:px-2 min-[1130px]:py-2">
-      <div className="flex w-full items-center justify-between">
+    <>
+      <div className="flex w-full items-center justify-between bg-darkBlue-100 px-3 py-[1.11rem] min-[1130px]:hidden">
         <button
           onClick={() => setIsOpen((open) => !open)}
-          className="min-[1130px]:hidden"
+          className="text-white"
         >
           {isOpen ? (
             <svg
@@ -54,43 +64,48 @@ const SideBar = () => {
           )}
         </button>
 
-        <img
-          src={EcommLogo}
-          alt="Ecomm Logo"
-          className="mx-auto sm:ml-[4.5rem] min-[1130px]:ml-0 min-[1130px]:mr-auto min-[1130px]:pb-5"
-        />
+        <img src={EcommLogo} alt="Ecomm Logo" className="mx-auto" />
       </div>
       {isOpen && (
-        <div className="flex flex-col gap-2 bg-darkBlue-100 max-[1129px]:p-4">
-          <a
-            className="flex w-full items-center justify-between gap-3"
-            href="/"
-          >
-            <div className="flex items-center gap-1">
-              <img src={MercadoLibreIcon} alt="Inventario" />
-              <span className="max-[1129px]:text-sm">Mercado Libre</span>
-            </div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 12 7"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="ml-auto mr-0 h-3 w-3"
+        <aside className="flex h-screen w-52 flex-col gap-3 bg-darkBlue-100 px-2 py-2 text-white max-[1129px]:absolute max-[1129px]:top-12 max-[1129px]:z-20">
+          <div>
+            <img
+              src={EcommLogo}
+              alt="Ecomm Logo"
+              className="min-[1130px]:ml-0 min-[1130px]:mr-auto min-[1130px]:pb-5"
+            />
+          </div>
+          <div className="flex flex-col gap-2 bg-darkBlue-100">
+            <a
+              className="flex w-full items-center justify-between gap-3"
+              href="/"
             >
-              <path
-                d="M5.29289 5.80797L1.70711 2.22218C1.07714 1.59222 1.52331 0.515076 2.41421 0.515076H9.58579C10.4767 0.515076 10.9229 1.59222 10.2929 2.22218L6.70711 5.80797C6.31658 6.19849 5.68342 6.19849 5.29289 5.80797Z"
-                fill="currentColor"
-              />
-            </svg>
-          </a>
-          <a className="flex w-full items-center gap-1" href="/">
-            <img src={InventoryIcon} alt="Inventario" />
-            <span>Inventario</span>
-          </a>
-        </div>
+              <div className="flex items-center gap-1">
+                <img src={MercadoLibreIcon} alt="Inventario" />
+                <span className="max-[1129px]:text-sm">Mercado Libre</span>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 12 7"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="ml-auto mr-0 h-3 w-3"
+              >
+                <path
+                  d="M5.29289 5.80797L1.70711 2.22218C1.07714 1.59222 1.52331 0.515076 2.41421 0.515076H9.58579C10.4767 0.515076 10.9229 1.59222 10.2929 2.22218L6.70711 5.80797C6.31658 6.19849 5.68342 6.19849 5.29289 5.80797Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </a>
+            <a className="flex w-full items-center gap-1" href="/">
+              <img src={InventoryIcon} alt="Inventario" />
+              <span>Inventario</span>
+            </a>
+          </div>
+        </aside>
       )}
-    </aside>
+    </>
   );
 };
 

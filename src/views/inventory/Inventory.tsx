@@ -111,7 +111,7 @@ const Inventory = () => {
           <span className="sr-only">Loading...</span>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 md:max-[1130px]:grid-cols-2 md:max-[1130px]:grid-rows-2 ">
+        <div className="grid h-[60%] grid-cols-1 gap-3 overflow-scroll md:max-[1130px]:grid-cols-2 min-[1130px]:h-[75%]">
           {data.map((item) => (
             <InventoryItem
               key={item.id}
