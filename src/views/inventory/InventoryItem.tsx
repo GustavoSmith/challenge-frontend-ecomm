@@ -5,15 +5,18 @@ type ItemProps = {
   picture: string;
 };
 
+/* const NewProductModal = () => {
+}; */
+
 const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
   return (
     <div className="flex min-h-[8.25rem] gap-3 rounded-sm bg-white p-3 shadow-[2px_2px_15px_0_rgba(0,0,0,0.15)]">
       <input
         name="selectItem1"
         type="checkbox"
-        className="border-darkBlue-200 text-darkBlue-200 rounded-sm focus:ring-0"
+        className="rounded-sm border-darkBlue-200 text-darkBlue-200 focus:ring-0"
       />
-      <button className="text-darkBlue-200 relative h-[3.75rem] w-[3.75rem]">
+      <button className="relative h-[3.75rem] w-[3.75rem] text-darkBlue-200">
         <img
           src={picture}
           alt="Headphone image"
@@ -45,7 +48,7 @@ const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
           </g>
         </svg>
       </button>
-      <div className="grid w-full grid-cols-2 gap-3">
+      <div className="grid w-full grid-cols-2 gap-3 min-[1130px]:h-fit">
         <label
           htmlFor="productTitle"
           className="flex w-full flex-col max-[1130px]:col-span-full"
@@ -56,7 +59,7 @@ const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
             id="productTitle"
             defaultValue={title}
             placeholder="Prueba"
-            className="text-darkBlue-200 focus:border-darkBlue-200 rounded-sm border-[#A1A3AF] text-sm/5 focus:shadow-[0_0_4px_0_#6097FF]"
+            className="rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
           />
         </label>
         <div className="flex gap-3">
@@ -67,7 +70,7 @@ const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
               id="productStock"
               defaultValue={stock}
               placeholder="Prueba"
-              className="text-darkBlue-200 focus:border-darkBlue-200 rounded-sm border-[#A1A3AF] text-sm/5 focus:shadow-[0_0_4px_0_#6097FF]"
+              className="rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
             />
           </label>
           <label htmlFor="productPrice" className="flex flex-col">
@@ -80,10 +83,12 @@ const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
                 id="productPrice"
                 defaultValue={price}
                 placeholder="Prueba"
-                className="text-darkBlue-200 focus:border-darkBlue-200 peer w-28 rounded-sm border-[#A1A3AF] pl-10 text-sm/5 focus:shadow-[0_0_4px_0_#6097FF]"
+                className="peer w-28 rounded-sm border-[#A1A3AF] pl-10 text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
               />
               <div className="absolute top-0 m-auto h-[2.4rem] w-8 bg-[#A1A3AF] text-white peer-focus:bg-[#4871bf]">
-                <span className="absolute left-3 top-2">$</span>
+                <span className="absolute left-[30%] top-[10%] text-2xl">
+                  $
+                </span>
               </div>
             </div>
           </label>
@@ -96,7 +101,7 @@ const InventoryItem = ({ title, stock, price, picture }: ItemProps) => {
           fill="none"
           strokeWidth={0.1}
           stroke="currentColor"
-          className="hover:text-darkBlue-200 h-[1.6875rem] w-[1.6875rem] rounded-sm bg-[#d7e5ff] px-3 py-[0.3rem] text-[#6097FF] hover:bg-[#b0cbff]"
+          className="h-[1.6875rem] w-[1.6875rem] rounded-sm bg-[#d7e5ff] px-3 py-[0.3rem] text-[#6097FF] hover:bg-[#b0cbff] hover:text-darkBlue-200"
         >
           <g id="Group 38244">
             <circle

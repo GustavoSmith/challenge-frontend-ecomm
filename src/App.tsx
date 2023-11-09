@@ -3,7 +3,7 @@ import { Inventory } from "./views/inventory";
 
 const App = () => {
   return (
-    <div className="flex font-poppins max-[1130px]:flex-col">
+    <div className="flex font-poppins max-[1129px]:flex-col">
       <SideBar />
       <div className="grow">
         <NavBar />
