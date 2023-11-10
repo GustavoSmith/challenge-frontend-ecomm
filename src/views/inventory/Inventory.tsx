@@ -4,6 +4,7 @@ import DialogModal from "@/components/DialogModal";
 import { Toaster } from "react-hot-toast";
 import { NewProductProps, ProductProps } from "./types";
 import handleRequestWithToast from "@/helpers/handleRequestWithToast";
+import picturePlaceholder from "@/assets/picture-placeholder.png";
 
 const Inventory = () => {
   const [data, setData] = useState<ProductProps[]>([]);
@@ -171,14 +172,14 @@ const Inventory = () => {
             </p>
             <form
               id="createNewProduct"
-              className="shadow-custom grid w-full grid-cols-3 items-start gap-3 rounded-sm bg-white p-3 sm:grid-cols-6 sm:grid-rows-2"
+              className="grid w-full grid-cols-3 items-start gap-3 rounded-sm bg-white p-3 shadow-custom sm:grid-cols-6 sm:grid-rows-2"
               onSubmit={(e) => handleNewProduct(e)}
             >
               <label
                 htmlFor="newProductPicture"
-                className={`col-span-2 col-start-1 row-span-2 row-start-1 h-20 w-20 bg-cover bg-center`}
+                className={`col-span-2 col-start-1 row-span-2 row-start-1 h-20 w-20 cursor-pointer bg-cover bg-center`}
                 style={{
-                  backgroundImage: `url(${selectedImage}), url('/src/assets/picture-placeholder.png')`,
+                  backgroundImage: `url(${selectedImage}), url(${picturePlaceholder})`,
                 }}
               >
                 <input
