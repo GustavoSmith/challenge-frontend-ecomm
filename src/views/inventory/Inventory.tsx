@@ -1,44 +1,12 @@
 import { useEffect, useState } from "react";
 import { InventoryItem } from ".";
 import DialogModal from "@/components/DialogModal";
-import toast, { Toaster } from "react-hot-toast";
-
-type NewInventoryItemProps = {
-  picture: string;
-  name: string;
-  description: string;
-  stock: number;
-  price: number;
-};
-
-type InventoryItemProps = NewInventoryItemProps & { id: number };
-
-const doPost = async (itemData: NewInventoryItemProps) => {
-  try {
-    const res = await fetch("https://admin.ecomm-app.com/api/challenge-items", {
-      method: "POST",
-      body: JSON.stringify(itemData),
-      headers: {
-        Authorization: `Bearer ${
-          import.meta.env.VITE_AUTHORIZATION_TOKEN_BEARER
-        }`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error("Error al crear el producto");
-    }
-
-    return res.ok;
-  } catch (error) {
-    console.error(error);
-    return Promise.reject(error);
-  }
-};
+import { Toaster } from "react-hot-toast";
+import { NewProductProps, ProductProps } from "./types";
+import { handleRequestWithToast } from "@/hooks/handleRequestWithToast";
 
 const Inventory = () => {
-  const [data, setData] = useState<InventoryItemProps[]>([]);
+  const [data, setData] = useState<ProductProps[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [openNewProdModal, setOpenNewProdModal] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -74,7 +42,7 @@ const Inventory = () => {
       newProductStock: stock,
     } = Object.fromEntries(formData);
 
-    const parsedItemData: NewInventoryItemProps = {
+    const parsedItemData: NewProductProps = {
       // Picture hardcodeada; no coincide la documentación con el diseño
       picture:
         "https://fastly.picsum.photos/id/1041/360/240.jpg?hmac=k0GSg3qY8v7Z8L0r_YrJ6f2zLbOUIvu641N-Ep2AQjc",
@@ -83,14 +51,19 @@ const Inventory = () => {
       stock: Number(stock),
       price: Number(price),
     };
-    toast
-      .promise(doPost(parsedItemData), {
+
+    handleRequestWithToast({
+      method: "CREATE",
+      productData: parsedItemData,
+      messages: {
         loading: "Procesando...",
-        success: "El producto se creó exitosamente.",
+        success:
+          "El producto se creó exitosamente. Refresque para ver los cambios.",
         error:
           "Hubo un error creando el producto. Por favor, intente más tarde.",
-      })
-      .finally(() => setOpenNewProdModal(false));
+      },
+      callback: () => setOpenNewProdModal(false),
+    });
   };
 
   const handleSelectItem = (id: number, isSelected: boolean) => {
@@ -314,7 +287,7 @@ const Inventory = () => {
             <InventoryItem
               key={item.id}
               id={item.id}
-              title={item.name}
+              name={item.name}
               stock={item.stock}
               price={item.price}
               picture={item.picture}

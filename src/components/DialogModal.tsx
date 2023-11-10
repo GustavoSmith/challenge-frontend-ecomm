@@ -5,13 +5,15 @@ import { Dispatch, SetStateAction, Fragment } from "react";
 interface DialogProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  name: "Nuevo producto" | "Foto de producto";
+  name: string;
   children: React.ReactNode;
 }
 
 const DialogModal = ({ isOpen, setIsOpen, name, children }: DialogProps) => {
+  const type = name === "Foto de producto" ? "changePic" : "changeProduct";
+
   const DialogIcon = () =>
-    name === "Nuevo producto" ? (
+    type === "changeProduct" ? (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 18 18"

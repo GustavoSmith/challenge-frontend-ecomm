@@ -1,6 +1,13 @@
+import { Menu, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import EditIcon from "@/assets/edit-icon.svg";
+import DeleteIcon from "@/assets/delete-icon.svg";
+import { handleRequestWithToast } from "@/hooks/handleRequestWithToast";
+import ConfirmationModal from "@/components/ConfirmationModal";
+
 type ItemProps = {
   id: number;
-  title: string;
+  name: string;
   stock: number;
   price: number;
   picture: string;
@@ -10,13 +17,64 @@ type ItemProps = {
 
 const InventoryItem = ({
   id,
-  title,
+  name,
   stock,
   price,
   picture,
   onSelect,
   isSelected,
 }: ItemProps) => {
+  const [openEditProdModal, setOpenEditProdModal] = useState(false);
+  const [openDeleteProdModal, setOpenDeleteProdModal] = useState(false);
+
+  const [product, setProduct] = useState({
+    name: name || "",
+    stock: stock !== undefined && stock !== null ? stock.toString() : "",
+    price: price !== undefined && price !== null ? price.toString() : "",
+  });
+
+  const handleEditProduct = () => {
+    handleRequestWithToast({
+      method: "EDIT",
+      productData: {
+        id,
+        name: product.name,
+        stock: Number(product.stock),
+        price: Number(product.price),
+        picture,
+      },
+      messages: {
+        loading: "Procesando...",
+        success:
+          "El producto se editó exitosamente. Refresque para ver los cambios.",
+        error:
+          "Hubo un error editando el producto. Por favor, intente más tarde.",
+      },
+      callback: () => setOpenEditProdModal(false),
+    });
+  };
+
+  const handleDeleteProduct = () => {
+    handleRequestWithToast({
+      method: "DELETE",
+      productData: {
+        id,
+        name: product.name,
+        stock: Number(product.stock),
+        price: Number(product.price),
+        picture,
+      },
+      messages: {
+        loading: "Procesando...",
+        success:
+          "El producto se eliminó exitosamente. Refresque para ver los cambios.",
+        error:
+          "Hubo un error eliminando el producto. Por favor, intente más tarde.",
+      },
+      callback: () => setOpenDeleteProdModal(false),
+    });
+  };
+
   const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSelect(id, event.target.checked);
   };
@@ -30,10 +88,10 @@ const InventoryItem = ({
         onChange={handleSelect}
         checked={isSelected}
       />
-      <button className="relative h-[3.75rem] w-[3.75rem] text-darkBlue-200">
+      <button className="relative h-[3.75rem] w-[3.75rem] text-darkBlue-200 focus:outline-darkBlue-100">
         <img
           src={picture}
-          alt="Headphone image"
+          alt="Product image"
           className="block h-full w-full"
         />
         <svg
@@ -71,7 +129,8 @@ const InventoryItem = ({
           <input
             type="text"
             id={`productTitle-${id}`}
-            defaultValue={title}
+            value={product.name}
+            onChange={(e) => setProduct({ ...product, name: e.target.value })}
             placeholder="Prueba"
             className="rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
           />
@@ -85,7 +144,10 @@ const InventoryItem = ({
             <input
               type="number"
               id={`productStock-${id}`}
-              defaultValue={stock}
+              value={product.stock}
+              onChange={(e) =>
+                setProduct({ ...product, stock: e.target.value })
+              }
               placeholder="Prueba"
               className="rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
             />
@@ -98,7 +160,10 @@ const InventoryItem = ({
                 min="1"
                 step="any"
                 id={`productPrice-${id}`}
-                defaultValue={price}
+                value={product.price}
+                onChange={(e) =>
+                  setProduct({ ...product, price: e.target.value })
+                }
                 placeholder="Prueba"
                 className="peer w-28 rounded-sm border-[#A1A3AF] pl-10 text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
               />
@@ -112,39 +177,90 @@ const InventoryItem = ({
         </div>
       </div>
       <div className="ml-auto mr-0">
-        <svg
-          viewBox="0 0 3 16"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          strokeWidth={0.1}
-          stroke="currentColor"
-          className="h-[1.6875rem] w-[1.6875rem] rounded-sm bg-[#d7e5ff] px-3 py-[0.3rem] text-[#6097FF] hover:bg-[#b0cbff] hover:text-darkBlue-200"
-        >
-          <g id="Group 38244">
-            <circle
-              id="Ellipse 66"
-              cx="1.45455"
-              cy="1.45455"
-              r="1.45455"
-              fill="currentColor"
-            />
-            <circle
-              id="Ellipse 67"
-              cx="1.45455"
-              cy="7.99996"
-              r="1.45455"
-              fill="currentColor"
-            />
-            <circle
-              id="Ellipse 68"
-              cx="1.45455"
-              cy="14.5455"
-              r="1.45455"
-              fill="currentColor"
-            />
-          </g>
-        </svg>
+        <Menu as="div" className="relative inline-block text-left">
+          <Menu.Button className="inline-flex w-full justify-center rounded-md focus:border-darkBlue-100 focus:outline-none focus:ring-0">
+            <svg
+              viewBox="0 0 3 16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              strokeWidth={0.1}
+              stroke="currentColor"
+              className="h-[1.6875rem] w-[1.6875rem] rounded-sm bg-[#d7e5ff] px-3 py-[0.3rem] text-[#6097FF] hover:bg-[#b0cbff] hover:text-darkBlue-200 focus:outline-darkBlue-100"
+            >
+              <g id="Group 38244">
+                <circle
+                  id="Ellipse 66"
+                  cx="1.45455"
+                  cy="1.45455"
+                  r="1.45455"
+                  fill="currentColor"
+                />
+                <circle
+                  id="Ellipse 67"
+                  cx="1.45455"
+                  cy="7.99996"
+                  r="1.45455"
+                  fill="currentColor"
+                />
+                <circle
+                  id="Ellipse 68"
+                  cx="1.45455"
+                  cy="14.5455"
+                  r="1.45455"
+                  fill="currentColor"
+                />
+              </g>
+            </svg>
+          </Menu.Button>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="shadow-custom absolute right-0 top-2/3 z-10 mt-2 w-56 origin-top-right divide-y rounded-md bg-white focus:outline-none">
+              <div className="flex flex-col gap-4 p-3">
+                <Menu.Item
+                  as="button"
+                  onClick={() => setOpenEditProdModal(true)}
+                  className="flex items-center"
+                >
+                  <img src={EditIcon} alt="Edit Icon" className="mr-4" />
+                  Editar
+                </Menu.Item>
+                <Menu.Item
+                  as="button"
+                  onClick={() => setOpenDeleteProdModal(true)}
+                  className="flex items-center"
+                >
+                  <img src={DeleteIcon} alt="Delete Icon" className="mr-3" />
+                  Eliminar
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Transition>
+        </Menu>
       </div>
+      <ConfirmationModal
+        isOpen={openEditProdModal}
+        setIsOpen={setOpenEditProdModal}
+        name="Editar producto"
+        message="¿Estás seguro de editar el producto? Los cambios que realizaste serán guardados."
+        confirmButtonText="Editar producto"
+        handleConfirm={handleEditProduct}
+      />
+
+      <ConfirmationModal
+        isOpen={openDeleteProdModal}
+        setIsOpen={setOpenDeleteProdModal}
+        name="Eliminar producto"
+        message="¿Estás seguro de eliminar el producto? Esto no puede revertirse."
+        confirmButtonText="Eliminar producto"
+        handleConfirm={handleDeleteProduct}
+      />
     </div>
   );
 };
