@@ -4,15 +4,31 @@ type ItemProps = {
   stock: number;
   price: number;
   picture: string;
+  onSelect: (id: number, isSelected: boolean) => void;
+  isSelected: boolean;
 };
 
-const InventoryItem = ({ id, title, stock, price, picture }: ItemProps) => {
+const InventoryItem = ({
+  id,
+  title,
+  stock,
+  price,
+  picture,
+  onSelect,
+  isSelected,
+}: ItemProps) => {
+  const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onSelect(id, event.target.checked);
+  };
   return (
-    <div className="flex gap-3 rounded-sm bg-white p-3 shadow-[2px_2px_15px_0_rgba(0,0,0,0.15)] min-[1130px]:min-h-[5.25rem]">
+    <div className="shadow-custom flex gap-3 rounded-sm bg-white p-3 min-[1130px]:min-h-[5.25rem]">
       <input
-        name="selectItem1"
+        name={`selectItem${id}`}
         type="checkbox"
         className="rounded-sm border-darkBlue-200 text-darkBlue-200 focus:ring-0"
+        aria-label={`Select Item ${id}`}
+        onChange={handleSelect}
+        checked={isSelected}
       />
       <button className="relative h-[3.75rem] w-[3.75rem] text-darkBlue-200">
         <img

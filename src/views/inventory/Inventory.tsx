@@ -1,20 +1,117 @@
 import { useEffect, useState } from "react";
 import { InventoryItem } from ".";
 import DialogModal from "@/components/DialogModal";
+import toast, { Toaster } from "react-hot-toast";
 
-type InventoryItem = {
+type NewInventoryItemProps = {
   picture: string;
   name: string;
   description: string;
   stock: number;
   price: number;
-  id: number;
+};
+
+type InventoryItemProps = NewInventoryItemProps & { id: number };
+
+const doPost = async (itemData: NewInventoryItemProps) => {
+  try {
+    const res = await fetch("https://admin.ecomm-app.com/api/challenge-items", {
+      method: "POST",
+      body: JSON.stringify(itemData),
+      headers: {
+        Authorization: `Bearer ${
+          import.meta.env.VITE_AUTHORIZATION_TOKEN_BEARER
+        }`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Error al crear el producto");
+    }
+
+    return res.ok;
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
 };
 
 const Inventory = () => {
-  const [data, setData] = useState<InventoryItem[]>([]);
+  const [data, setData] = useState<InventoryItemProps[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [openNewProdModal, setOpenNewProdModal] = useState<boolean>(false);
-  const [openChangeImgModal, setOpenChangeImgModal] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        setSelectedImage(e.target?.result as string);
+      };
+
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
+
+  const handleNewProduct = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!selectedImage) {
+      alert("Por favor, seleccione una imagen para el nuevo producto.");
+      return;
+    }
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const {
+      /* newProductPicture: picture, */
+      newProductName: name,
+      newProductPrice: price,
+      description = "",
+      newProductStock: stock,
+    } = Object.fromEntries(formData);
+
+    const parsedItemData: NewInventoryItemProps = {
+      // Picture hardcodeada; no coincide la documentación con el diseño
+      picture:
+        "https://fastly.picsum.photos/id/1041/360/240.jpg?hmac=k0GSg3qY8v7Z8L0r_YrJ6f2zLbOUIvu641N-Ep2AQjc",
+      name: name as string,
+      description: description as string,
+      stock: Number(stock),
+      price: Number(price),
+    };
+    toast
+      .promise(doPost(parsedItemData), {
+        loading: "Procesando...",
+        success: "El producto se creó exitosamente.",
+        error:
+          "Hubo un error creando el producto. Por favor, intente más tarde.",
+      })
+      .finally(() => setOpenNewProdModal(false));
+  };
+
+  const handleSelectItem = (id: number, isSelected: boolean) => {
+    setSelectedItems((prevSelectedItems) => {
+      if (isSelected) {
+        return [...prevSelectedItems, id];
+      } else {
+        return prevSelectedItems.filter((itemId) => itemId !== id);
+      }
+    });
+  };
+
+  const allItemsSelected = selectedItems.length === data.length;
+
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      setSelectedItems(data.map((item) => item.id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
 
   useEffect(() => {
     fetch("https://admin.ecomm-app.com/api/challenge-items", {
@@ -27,7 +124,7 @@ const Inventory = () => {
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         return [];
       });
   }, []);
@@ -52,8 +149,14 @@ const Inventory = () => {
             id="selectAllItems"
             type="checkbox"
             className="rounded-sm border-darkBlue-200 text-darkBlue-200 focus:ring-0"
+            onChange={handleSelectAll}
+            checked={allItemsSelected}
           />
-          <span>Seleccionar todos</span>
+          {selectedItems.length > 0 ? (
+            <span>{selectedItems.length} productos seleccionados </span>
+          ) : (
+            <span>Seleccionar todos</span>
+          )}
         </label>
         <button
           onClick={() => setOpenNewProdModal(true)}
@@ -87,7 +190,102 @@ const Inventory = () => {
           isOpen={openNewProdModal}
           setIsOpen={setOpenNewProdModal}
           name="Nuevo producto"
-        />
+        >
+          <>
+            <p className="text-sm">
+              Creá tu producto y vinculalo con las publicaciones
+              correspondientes.
+            </p>
+            <form
+              id="createNewProduct"
+              className="shadow-custom grid w-full grid-cols-3 items-start gap-3 rounded-sm bg-white p-3 sm:grid-cols-6 sm:grid-rows-2"
+              onSubmit={(e) => handleNewProduct(e)}
+            >
+              <label
+                htmlFor="newProductPicture"
+                className={`col-span-2 col-start-1 row-span-2 row-start-1 h-20 w-20 bg-cover bg-center`}
+                style={{
+                  backgroundImage: `url(${selectedImage}), url('/src/assets/picture-placeholder.png')`,
+                }}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="newProductPicture"
+                  id="newProductPicture"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </label>
+              <label
+                htmlFor="newProductName"
+                className="col-span-4 col-start-2 row-start-1 flex flex-col"
+              >
+                <span className="text-xs/4">Titulo</span>
+                <input
+                  type="text"
+                  name="newProductName"
+                  id="newProductName"
+                  required
+                  className="w-full rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF]"
+                />
+              </label>
+              <div className="col-start-2 row-start-2 flex gap-3">
+                <label
+                  htmlFor="newProductPrice"
+                  className="col-span-2 flex flex-col"
+                >
+                  <span className="text-xs/4">Precio</span>
+                  <div className="relative flex flex-row">
+                    <input
+                      type="number"
+                      min="1"
+                      step="any"
+                      name="newProductPrice"
+                      id="newProductPrice"
+                      required
+                      className="peer w-[7rem] rounded-sm border-[#A1A3AF] pl-10 text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF] max-[390px]:max-w-[5rem]"
+                    />
+                    <div className="absolute top-0 m-auto h-[2.4rem] w-8 bg-[#A1A3AF] text-white peer-focus:bg-[#4871bf]">
+                      <span className="absolute left-[30%] top-[10%] text-2xl">
+                        $
+                      </span>
+                    </div>
+                  </div>
+                </label>
+                <label
+                  htmlFor="newProductStock"
+                  className="col-span-2 flex flex-col"
+                >
+                  <span className="text-xs/4">Stock</span>
+                  <input
+                    type="text"
+                    name="newProductStock"
+                    id="newProductStock"
+                    required
+                    className="w-[7rem] rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF] max-[390px]:max-w-[5rem]"
+                  />
+                </label>
+              </div>
+            </form>
+            <div className="flex gap-3 max-[1129px]:flex-col min-[1130px]:ml-auto min-[1130px]:flex-row-reverse">
+              <button
+                type="submit"
+                form="createNewProduct"
+                className="h-10 rounded-[0.25rem] bg-[#6097ff] font-bold text-white min-[1130px]:w-[12.625rem]
+              "
+              >
+                Crear producto
+              </button>
+              <button
+                onClick={() => setOpenNewProdModal(false)}
+                className="h-10 rounded-[0.25rem] border border-[#6097ff] font-bold text-[#6097ff] min-[1130px]:w-[12.625rem]"
+              >
+                Cancelar
+              </button>
+            </div>
+          </>
+        </DialogModal>
       </div>
 
       {data.length === 0 ? (
@@ -120,15 +318,43 @@ const Inventory = () => {
               stock={item.stock}
               price={item.price}
               picture={item.picture}
+              onSelect={handleSelectItem}
+              isSelected={selectedItems.includes(item.id)}
             />
           ))}
         </div>
       )}
 
-      <DialogModal
+      {/* <DialogModal
         isOpen={openChangeImgModal}
         setIsOpen={setOpenChangeImgModal}
         name="Foto de producto"
+      /> */}
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 5000,
+          loading: {
+            style: {
+              background: "#909399",
+              color: "white",
+            },
+          },
+          success: {
+            style: {
+              background: "green",
+              color: "white",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+              color: "white",
+            },
+          },
+        }}
       />
     </div>
   );

@@ -6,9 +6,10 @@ interface DialogProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   name: "Nuevo producto" | "Foto de producto";
+  children: React.ReactNode;
 }
 
-const DialogModal = ({ isOpen, setIsOpen, name }: DialogProps) => {
+const DialogModal = ({ isOpen, setIsOpen, name, children }: DialogProps) => {
   const DialogIcon = () =>
     name === "Nuevo producto" ? (
       <svg
@@ -17,7 +18,7 @@ const DialogModal = ({ isOpen, setIsOpen, name }: DialogProps) => {
         fill="none"
         strokeWidth={0.25}
         stroke="currentColor"
-        className="h-5 w-8"
+        className="h-6 w-6"
       >
         <circle cx="9" cy="9" r="8.57" stroke="white" strokeWidth="0.86" />
         <path
@@ -88,9 +89,9 @@ const DialogModal = ({ isOpen, setIsOpen, name }: DialogProps) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-[0.63rem] bg-white text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-screen-md transform overflow-hidden rounded-[0.63rem] bg-white text-left align-middle font-poppins shadow-xl transition-all">
                 <div className="flex items-center justify-between bg-[#6097ff] px-3 py-4">
-                  <div className="flex items-center text-white">
+                  <div className="flex items-center gap-2 text-white">
                     <DialogIcon />
                     <Dialog.Title
                       as="h3"
@@ -121,24 +122,8 @@ const DialogModal = ({ isOpen, setIsOpen, name }: DialogProps) => {
                     </svg>
                   </button>
                 </div>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Soluta aspernatur porro harum quisquam maxime tempore omnis
-                    nihil velit, placeat nulla quasi assumenda perferendis
-                    voluptas veniam veritatis numquam officia voluptates!
-                    Molestiae.
-                  </p>
-                </div>
-
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Ok
-                  </button>
+                <div className="flex flex-col gap-3 bg-[#ececec] p-3">
+                  {children}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

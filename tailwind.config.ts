@@ -13,6 +13,9 @@ export default {
           200: "#304B7F",
         },
       },
+      boxShadow: {
+        custom: "2px 2px 15px 0px rgba(0, 0, 0, 0.15);",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],
