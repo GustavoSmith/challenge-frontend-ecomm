@@ -217,7 +217,7 @@ const Inventory = () => {
                       name="newProductPrice"
                       id="newProductPrice"
                       required
-                      className="peer w-[7rem] rounded-sm border-[#A1A3AF] pl-10 text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF] max-[390px]:max-w-[5rem]"
+                      className="peer w-[7rem] rounded-sm border-[#A1A3AF] pl-10 text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF] max-[425px]:max-w-[5rem]"
                     />
                     <div className="absolute top-0 m-auto h-[2.4rem] w-8 bg-[#A1A3AF] text-white peer-focus:bg-[#4871bf]">
                       <span className="absolute left-[30%] top-[10%] text-2xl">
@@ -236,7 +236,7 @@ const Inventory = () => {
                     name="newProductStock"
                     id="newProductStock"
                     required
-                    className="w-[7rem] rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF] max-[390px]:max-w-[5rem]"
+                    className="w-[7rem] rounded-sm border-[#A1A3AF] text-sm/5 text-darkBlue-200 focus:border-darkBlue-200 focus:shadow-[0_0_4px_0_#6097FF] max-[425px]:max-w-[5rem]"
                   />
                 </label>
               </div>

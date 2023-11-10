@@ -39,8 +39,6 @@ export const handleRequestWithToast = ({
     !("id" in productData) ? "" : `/${productData.id}`
   }`;
 
-  console.log({ productData });
-
   const promise = async (productData: ProductData) => {
     try {
       const res = await fetch(url, {

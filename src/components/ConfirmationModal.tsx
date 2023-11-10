@@ -20,7 +20,9 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => (
   <DialogModal isOpen={isOpen} setIsOpen={setIsOpen} name={name}>
     <>
-      <p className="my-16 px-32 text-center text-xl">{message}</p>
+      <p className="my-8 px-16 text-center text-xl md:my-16 md:px-32">
+        {message}
+      </p>
 
       <div className="flex gap-3 max-[1129px]:flex-col min-[1130px]:ml-auto min-[1130px]:flex-row-reverse">
         <button
