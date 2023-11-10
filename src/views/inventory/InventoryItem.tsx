@@ -111,7 +111,6 @@ const InventoryItem = ({
       return;
     }
     const file = await dataUrlToFile(editedImage as string, "file.png");
-    console.log({ file });
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/upload_img/${id}}`,
@@ -127,9 +126,8 @@ const InventoryItem = ({
         },
       );
 
-      console.log({ res });
+       // Por algún motivo falla la request...
       const data = await res.json();
-      console.log({ data });
 
       handleRequestWithToast({
         method: "EDIT",
