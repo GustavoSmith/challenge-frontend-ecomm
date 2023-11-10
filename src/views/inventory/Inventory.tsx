@@ -3,7 +3,7 @@ import { InventoryItem } from ".";
 import DialogModal from "@/components/DialogModal";
 import { Toaster } from "react-hot-toast";
 import { NewProductProps, ProductProps } from "./types";
-import { handleRequestWithToast } from "@/hooks/handleRequestWithToast";
+import handleRequestWithToast from "@/helpers/handleRequestWithToast";
 
 const Inventory = () => {
   const [data, setData] = useState<ProductProps[]>([]);

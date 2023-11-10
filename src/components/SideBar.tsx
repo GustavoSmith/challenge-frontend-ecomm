@@ -1,4 +1,4 @@
-import useWindowDimensions from "@/hooks/useWindowDimensions";
+import useWindowDimensions from "@/helpers/useWindowDimensions";
 import EcommLogo from "@assets/ecomm-logo.svg";
 import InventoryIcon from "@assets/inventory-icon.svg";
 import MercadoLibreIcon from "@assets/mercadolibre-icon.svg";
@@ -30,6 +30,7 @@ const SideBar = () => {
         <button
           onClick={() => setIsOpen((open) => !open)}
           className="text-white"
+          aria-label="Open Menu"
         >
           {isOpen ? (
             <svg
@@ -81,7 +82,7 @@ const SideBar = () => {
               href="/"
             >
               <div className="flex items-center gap-1">
-                <img src={MercadoLibreIcon} alt="Inventario" />
+                <img src={MercadoLibreIcon} alt="Mercado Libre Icon" />
                 <span className="max-[1129px]:text-sm">Mercado Libre</span>
               </div>
               <svg
@@ -99,7 +100,7 @@ const SideBar = () => {
               </svg>
             </a>
             <a className="flex w-full items-center gap-1" href="/">
-              <img src={InventoryIcon} alt="Inventario" />
+              <img src={InventoryIcon} alt="Inventario Icon" />
               <span>Inventario</span>
             </a>
           </div>

@@ -2,7 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import EditIcon from "@/assets/edit-icon.svg";
 import DeleteIcon from "@/assets/delete-icon.svg";
-import { handleRequestWithToast } from "@/hooks/handleRequestWithToast";
+import handleRequestWithToast from "@/helpers/handleRequestWithToast";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
 type ItemProps = {
@@ -178,7 +178,10 @@ const InventoryItem = ({
       </div>
       <div className="ml-auto mr-0">
         <Menu as="div" className="relative inline-block text-left">
-          <Menu.Button className="inline-flex w-full justify-center rounded-md focus:border-darkBlue-100 focus:outline-none focus:ring-0">
+          <Menu.Button
+            className="inline-flex w-full justify-center rounded-md focus:border-darkBlue-100 focus:outline-none focus:ring-0"
+            aria-label="Context menu"
+          >
             <svg
               viewBox="0 0 3 16"
               xmlns="http://www.w3.org/2000/svg"

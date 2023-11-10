@@ -3,6 +3,7 @@ const NavBar = () => {
     <div className="flex h-[3.75rem] items-center justify-end bg-white px-3 shadow-[0_2px_10px_0_rgba(48,75,127,0.20)]">
       <div className="flex gap-4 text-darkBlue-100">
         <a href="/">
+          <span className="sr-only">Truck Button</span>
           {/* Truck SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +93,7 @@ const NavBar = () => {
           </svg>
         </a>
         <a href="/">
+          <span className="sr-only">Question Button</span>
           {/* Question Blob SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"

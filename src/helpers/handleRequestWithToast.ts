@@ -29,7 +29,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export const handleRequestWithToast = ({
+const handleRequestWithToast = ({
   method,
   productData,
   messages,
@@ -66,3 +66,5 @@ export const handleRequestWithToast = ({
     })
     .finally(callback);
 };
+
+export default handleRequestWithToast;
