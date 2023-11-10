@@ -2,8 +2,10 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import EditIcon from "@/assets/edit-icon.svg";
 import DeleteIcon from "@/assets/delete-icon.svg";
-import handleRequestWithToast from "@/helpers/handleRequestWithToast";
 import ConfirmationModal from "@/components/ConfirmationModal";
+import DialogModal from "@/components/DialogModal";
+
+import handleRequestWithToast from "@/helpers/handleRequestWithToast";
 
 type ItemProps = {
   id: number;
@@ -13,6 +15,15 @@ type ItemProps = {
   picture: string;
   onSelect: (id: number, isSelected: boolean) => void;
   isSelected: boolean;
+};
+
+const dataUrlToFile = async (
+  dataUrl: string,
+  fileName: string,
+): Promise<File> => {
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  return new File([blob], fileName, { type: "image/jpeg" });
 };
 
 const InventoryItem = ({
@@ -26,12 +37,29 @@ const InventoryItem = ({
 }: ItemProps) => {
   const [openEditProdModal, setOpenEditProdModal] = useState(false);
   const [openDeleteProdModal, setOpenDeleteProdModal] = useState(false);
-
+  const [openChangePicModal, setOpenChangePicModal] = useState(false);
+  const [editedImage, setEditedImage] = useState<string | null>(null);
   const [product, setProduct] = useState({
     name: name || "",
     stock: stock !== undefined && stock !== null ? stock.toString() : "",
     price: price !== undefined && price !== null ? price.toString() : "",
   });
+
+  const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onSelect(id, event.target.checked);
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        setEditedImage(e.target?.result as string);
+      };
+
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
 
   const handleEditProduct = () => {
     handleRequestWithToast({
@@ -75,11 +103,60 @@ const InventoryItem = ({
     });
   };
 
-  const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onSelect(id, event.target.checked);
+  const handleEditImg = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!editedImage) {
+      alert("Por favor, cargue una imagen válida.");
+      return;
+    }
+    const file = await dataUrlToFile(editedImage as string, "file.png");
+    console.log({ file });
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/upload_img/${id}}`,
+        {
+          method: "PUT",
+          body: file,
+          headers: {
+            Authorization: `Bearer ${
+              import.meta.env.VITE_AUTHORIZATION_TOKEN_BEARER
+            }`,
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      console.log({ res });
+      const data = await res.json();
+      console.log({ data });
+
+      handleRequestWithToast({
+        method: "EDIT",
+        productData: {
+          id,
+          name: product.name,
+          stock: Number(product.stock),
+          price: Number(product.price),
+          picture: data.picture_url,
+        },
+        messages: {
+          loading: "Procesando...",
+          success:
+            "La imagen se editó exitosamente. Refresque para ver los cambios.",
+          error:
+            "Hubo un error editando la foto del producto. Por favor, intente más tarde.",
+        },
+        callback: () => setOpenChangePicModal(false),
+      });
+    } catch (error) {
+      console.error(error);
+      return Promise.reject(error);
+    }
   };
+
   return (
-    <div className="shadow-custom flex gap-3 rounded-sm bg-white p-3 min-[1130px]:min-h-[5.25rem]">
+    <div className="flex gap-3 rounded-sm bg-white p-3 shadow-custom min-[1130px]:min-h-[5.25rem]">
       <input
         name={`selectItem${id}`}
         type="checkbox"
@@ -88,7 +165,10 @@ const InventoryItem = ({
         onChange={handleSelect}
         checked={isSelected}
       />
-      <button className="relative h-[3.75rem] w-[3.75rem] text-darkBlue-200 focus:outline-darkBlue-100">
+      <button
+        className="relative h-[3.75rem] w-[3.75rem] text-darkBlue-200 focus:outline-darkBlue-100"
+        onClick={() => setOpenChangePicModal(true)}
+      >
         <img
           src={picture}
           alt="Product image"
@@ -224,7 +304,7 @@ const InventoryItem = ({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="shadow-custom absolute right-0 top-2/3 z-10 mt-2 w-56 origin-top-right divide-y rounded-md bg-white focus:outline-none">
+            <Menu.Items className="absolute right-0 top-2/3 z-10 mt-2 w-56 origin-top-right divide-y rounded-md bg-white shadow-custom focus:outline-none">
               <div className="flex flex-col gap-4 p-3">
                 <Menu.Item
                   as="button"
@@ -264,6 +344,63 @@ const InventoryItem = ({
         confirmButtonText="Eliminar producto"
         handleConfirm={handleDeleteProduct}
       />
+      <DialogModal
+        isOpen={openChangePicModal}
+        setIsOpen={setOpenChangePicModal}
+        name="Foto de producto"
+      >
+        <form
+          className="grid grid-cols-1 items-center justify-items-center gap-3 min-[1130px]:h-64 min-[1130px]:grid-cols-3"
+          onSubmit={(e) => handleEditImg(e)}
+        >
+          <label
+            htmlFor="editProductPicture"
+            className="col-span-1 h-[12.625rem] w-[12.625rem] cursor-pointer bg-cover bg-center p-3 shadow-[1px_1px_9px_0_rgba(0,0,0,0.25)]"
+            style={{
+              backgroundImage: `url(${editedImage}), url(${picture})`,
+            }}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              name="editProductPicture"
+              id="editProductPicture"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+          </label>
+          <div className="col-span-2 flex w-full flex-col gap-3 px-3">
+            <p className="text-sm/[1.37rem] font-light min-[1130px]:text-base">
+              Al subir o cambiar esta imagen solo se modifica en el inventario
+              de Ecomm-App.
+              <span className="font-normal">
+                {" "}
+                No cambia ni reemplaza las imágenes en los canales de venta.
+              </span>
+            </p>
+
+            <div className="flex w-full flex-col items-center gap-3">
+              <button
+                type="submit"
+                className="h-10 rounded-[0.25rem] bg-[#6097ff] font-bold text-white min-[1130px]:w-full"
+              >
+                Cambiar foto
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  // No está hecho el endpoint para solo borrar la imagen
+                  setOpenChangePicModal(false);
+                }}
+                className="flex h-10 items-center justify-center rounded-[0.25rem] text-sm/[1.37rem] text-[#6097ff] min-[1130px]:w-full"
+              >
+                <img src={DeleteIcon} alt="Delete Icon" className="mr-3" />
+                <span>Eliminar foto</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </DialogModal>
     </div>
   );
 };

@@ -16,10 +16,12 @@ const SideBar = () => {
       if (isMobile && currentIsOpen) {
         document.body.classList.add("overflow-hidden");
         page?.classList.add("blur-sm");
+        page?.classList.add("pointer-events-none");
         return true;
       }
       document.body.classList.remove("overflow-hidden");
       page?.classList.remove("blur-sm");
+      page?.classList.remove("pointer-events-none");
       return !isMobile;
     });
   }, [width, isOpen]);

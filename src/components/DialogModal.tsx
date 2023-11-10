@@ -39,25 +39,28 @@ const DialogModal = ({ isOpen, setIsOpen, name, children }: DialogProps) => {
     ) : (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 18 18"
         fill="none"
-        strokeWidth={0.25}
+        viewBox="0 0 26 26"
+        strokeWidth={1}
         stroke="currentColor"
-        className="h-5 w-8"
+        className="h-7 w-6"
       >
-        <circle cx="9" cy="9" r="8.57" stroke="white" strokeWidth="0.86" />
-        <path
-          d="M9.125 4.77881V13.9712"
-          stroke="white"
-          strokeWidth="0.86"
-          strokeLinecap="round"
-        />
-        <path
-          d="M13.7212 9.375L4.5288 9.375"
-          stroke="white"
-          strokeWidth="0.86"
-          strokeLinecap="round"
-        />
+        <g id="Group 37541">
+          <path
+            id="Vector 498"
+            d="M3.62356 4.44828H5.87999C6.9787 4.44828 7.96426 3.75492 8.34458 2.72414C8.7249 1.69335 9.71046 1 10.8092 1H15.3648C16.4601 1 17.4362 1.69107 17.8 2.72414C18.1638 3.7572 19.1399 4.44828 20.2352 4.44828H22.3764C23.8254 4.44828 25 5.62289 25 7.07184V18.3764C25 19.8254 23.8254 21 22.3764 21H3.62356C2.17461 21 1 19.8254 1 18.3764V7.07184C1 5.62289 2.17461 4.44828 3.62356 4.44828Z"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <circle
+            id="Ellipse 77"
+            cx="13"
+            cy="12"
+            r="4.5"
+            stroke="currentColor"
+          />
+        </g>
       </svg>
     );
 
