@@ -2,6 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import EditIcon from "@/assets/edit-icon.svg";
 import DeleteIcon from "@/assets/delete-icon.svg";
+import picturePlaceholder from "@/assets/picture-placeholder.png";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import DialogModal from "@/components/DialogModal";
 
@@ -171,7 +172,7 @@ const InventoryItem = ({
         onClick={() => setOpenChangePicModal(true)}
       >
         <img
-          src={picture}
+          src={picture || picturePlaceholder}
           alt="Product image"
           className="block h-full w-full"
         />
@@ -358,7 +359,7 @@ const InventoryItem = ({
             htmlFor="editProductPicture"
             className="col-span-1 h-[12.625rem] w-[12.625rem] cursor-pointer bg-cover bg-center p-3 shadow-[1px_1px_9px_0_rgba(0,0,0,0.25)]"
             style={{
-              backgroundImage: `url(${editedImage}), url(${picture})`,
+              backgroundImage: `url(${editedImage}), url(${picture}), url(${picturePlaceholder})`,
             }}
           >
             <input
