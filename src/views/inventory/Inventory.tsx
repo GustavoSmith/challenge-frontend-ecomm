@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { InventoryItem } from ".";
 import DialogModal from "@/components/DialogModal";
 import { Toaster } from "react-hot-toast";
-import { NewProductProps, ProductProps } from "./types";
+import { NewProductProps } from "./types";
 import handleRequestWithToast from "@/helpers/handleRequestWithToast";
 import picturePlaceholder from "@/assets/picture-placeholder.png";
+import { useProductsStore } from "@/helpers/useInventory";
 
 const Inventory = () => {
-  const [data, setData] = useState<ProductProps[]>([]);
+  const { products, getProducts } = useProductsStore();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [openNewProdModal, setOpenNewProdModal] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -58,12 +59,12 @@ const Inventory = () => {
       productData: parsedItemData,
       messages: {
         loading: "Procesando...",
-        success:
-          "El producto se creó exitosamente. Refresque para ver los cambios.",
+        success: "El producto se creó exitosamente.",
         error:
           "Hubo un error creando el producto. Por favor, intente más tarde.",
       },
       callback: () => setOpenNewProdModal(false),
+      getProducts,
     });
   };
 
@@ -77,31 +78,19 @@ const Inventory = () => {
     });
   };
 
-  const allItemsSelected = selectedItems.length === data.length;
+  const allItemsSelected = selectedItems.length === products.length;
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelectedItems(data.map((item) => item.id));
+      setSelectedItems(products.map((item) => item.id));
     } else {
       setSelectedItems([]);
     }
   };
 
   useEffect(() => {
-    fetch("https://admin.ecomm-app.com/api/challenge-items", {
-      headers: {
-        Authorization: `Bearer ${
-          import.meta.env.VITE_AUTHORIZATION_TOKEN_BEARER
-        }`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setData(data))
-      .catch((error) => {
-        console.error(error);
-        return [];
-      });
-  }, []);
+    getProducts();
+  }, [getProducts]);
 
   return (
     <div className="h-[calc(100vh-3.75rem)] bg-[#ececec] py-3 pl-3 pr-[18px]">
@@ -262,7 +251,7 @@ const Inventory = () => {
         </DialogModal>
       </div>
 
-      {data.length === 0 ? (
+      {products.length === 0 ? (
         <div role="status">
           <svg
             aria-hidden="true"
@@ -284,7 +273,7 @@ const Inventory = () => {
         </div>
       ) : (
         <div className="grid h-[60%] grid-cols-1 gap-3 overflow-scroll md:max-[1130px]:grid-cols-2 min-[1130px]:h-[75%]">
-          {data.map((item) => (
+          {products.map((item) => (
             <InventoryItem
               key={item.id}
               id={item.id}

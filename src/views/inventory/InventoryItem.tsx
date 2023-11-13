@@ -6,6 +6,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import DialogModal from "@/components/DialogModal";
 
 import handleRequestWithToast from "@/helpers/handleRequestWithToast";
+import { useProductsStore } from "@/helpers/useInventory";
 
 type ItemProps = {
   id: number;
@@ -45,6 +46,8 @@ const InventoryItem = ({
     price: price !== undefined && price !== null ? price.toString() : "",
   });
 
+  const { getProducts } = useProductsStore();
+
   const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSelect(id, event.target.checked);
   };
@@ -73,12 +76,12 @@ const InventoryItem = ({
       },
       messages: {
         loading: "Procesando...",
-        success:
-          "El producto se editó exitosamente. Refresque para ver los cambios.",
+        success: "El producto se editó exitosamente.",
         error:
           "Hubo un error editando el producto. Por favor, intente más tarde.",
       },
       callback: () => setOpenEditProdModal(false),
+      getProducts,
     });
   };
 
@@ -94,12 +97,12 @@ const InventoryItem = ({
       },
       messages: {
         loading: "Procesando...",
-        success:
-          "El producto se eliminó exitosamente. Refresque para ver los cambios.",
+        success: "El producto se eliminó exitosamente.",
         error:
           "Hubo un error eliminando el producto. Por favor, intente más tarde.",
       },
       callback: () => setOpenDeleteProdModal(false),
+      getProducts,
     });
   };
 
@@ -126,7 +129,7 @@ const InventoryItem = ({
         },
       );
 
-       // Por algún motivo falla la request...
+      // Por algún motivo falla la request...
       const data = await res.json();
 
       handleRequestWithToast({
@@ -140,12 +143,12 @@ const InventoryItem = ({
         },
         messages: {
           loading: "Procesando...",
-          success:
-            "La imagen se editó exitosamente. Refresque para ver los cambios.",
+          success: "La imagen se editó exitosamente.",
           error:
             "Hubo un error editando la foto del producto. Por favor, intente más tarde.",
         },
         callback: () => setOpenChangePicModal(false),
+        getProducts,
       });
     } catch (error) {
       console.error(error);

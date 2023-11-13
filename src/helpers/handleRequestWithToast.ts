@@ -16,6 +16,7 @@ type RequestProps = {
     error: string;
   };
   callback: () => void;
+  getProducts: () => Promise<void>;
 };
 
 const methods = {
@@ -29,11 +30,12 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-const handleRequestWithToast = ({
+const HandleRequestWithToast = ({
   method,
   productData,
   messages,
   callback,
+  getProducts,
 }: RequestProps) => {
   const url = `${import.meta.env.VITE_API_URL}${
     !("id" in productData) ? "" : `/${productData.id}`
@@ -51,6 +53,7 @@ const handleRequestWithToast = ({
         throw new Error(`Error al realizar la operación ${method}`);
       }
 
+      await getProducts();
       return res.ok;
     } catch (error) {
       console.error(error);
@@ -64,7 +67,10 @@ const handleRequestWithToast = ({
       success: messages.success,
       error: messages.error,
     })
-    .finally(callback);
+    .finally(async () => {
+      await getProducts();
+      callback();
+    });
 };
 
-export default handleRequestWithToast;
+export default HandleRequestWithToast;
